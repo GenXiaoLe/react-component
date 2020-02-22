@@ -1,18 +1,26 @@
 import React, { Component } from 'react';
 import { Input, Button } from 'antd';
 import KFormCreate from '../plugins/Form';
+import DialogPage from './dialogPage';
 
 class FormPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: '',
-            password: ''
+            password: '',
+            isShow: false,
         }
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    onSubmit() {
+    toggle = () => {
+        this.setState({
+            isShow: !this.state.isShow
+        })
+    }
+
+    onSubmit = () => {
         const { getFieldValue, getFieldValues, validateFields } = this.props;
         let fields = getFieldValues();
         let field = getFieldValue('name');
@@ -38,6 +46,8 @@ class FormPage extends Component {
                     rules: {required: true, type: 'string'}
                 })(<Input type="password" placeholder="password" />) }
                 <Button onClick={this.onSubmit}> 登陆 </ Button>
+                <Button onClick={this.toggle}> 显示弹窗 </ Button>
+                {this.state.isShow && <DialogPage />}
             </div>
         )
     }
