@@ -40,10 +40,10 @@ class FormPage extends Component {
         return (
             <div>
                 { getFieldDecorator('name', {
-                    rules: {required: true, type: 'string'}
+                    rules: {required: true, type: 'string', message: 'plase input ur name'}
                 })(<Input type="text" placeholder="use name" />) }
                 { getFieldDecorator('password', {
-                    rules: {required: true, type: 'string'}
+                    rules: {required: true, type: 'string', message: 'plase input ur password'}
                 })(<Input type="password" placeholder="password" />) }
                 <Button onClick={this.onSubmit}> 登陆 </ Button>
                 <Button onClick={this.toggle}> 显示弹窗 </ Button>

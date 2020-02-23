@@ -4,25 +4,33 @@ const kFormCeater = Comp => {
     return class Form extends Component {
         constructor(props) {
             super(props);
-            this.state = {};
+            this.state = {
+                error: {}
+            };
             this.options = {};
-            this.error = {};
         }
         handleChange = (e) => {
             let { name, value } = e.target;
-
-            this.setState({
+            this.validateInit({
+                ...this.state,
                 [name]: value
             });
         }
         // 获取传入组件并绑定相应事件
         getFieldDecorator = (field, options) => InputComp => {
             this.options[field] = options;
-            return React.cloneElement(InputComp, {
-                name: field,
-                value: this.state[field] || '',
-                onChange: this.handleChange
-            });
+            return <div>
+                {
+                    React.cloneElement(InputComp, {
+                        name: field,
+                        value: this.state[field] || '',
+                        onChange: this.handleChange
+                    })
+                }
+                {
+                    this.state.error[field] && <p>{this.state.error[field]}</p>
+                }
+            </div>;
         }
         // 获取单个value
         getFieldValue = (field) => {
@@ -32,29 +40,36 @@ const kFormCeater = Comp => {
         getFieldValues = () => {
             return {...this.state};
         }
-        // 数据校验
-        validateFields = (validateCallback) => {
+        validateInit = (state) => {
+            // 设置错误信息
+            const error = {};
             // 配置验证表
             const dict = {
-                required: (_name) => !this.state[_name] || this.state[_name] === '',
-                type: (_name, _type) => !this.state[_name] || typeof this.state[_name] !== _type
+                required: (_name) => !state[_name] || state[_name] === '',
+                type: (_name, _type) => !state[_name] || typeof state[_name] !== _type
             }
 
             //接收一个callback，校验结束后返回error和value
-            this.error = {};
-
             for (let name in this.options) {
                 let _rules = this.options[name].rules;
                 if (name && _rules) {
                     for (let item in _rules) {
-                        if (_rules[item] && dict[item](name, _rules[item])) {
-                            this.error[name] = `${name} is error`;
+                        if (_rules[item] && dict[item] && dict[item](name, _rules[item])) {
+                            error[name] = this.options[name].rules.message;
                         }
                     }
                 }
             }
 
-            validateCallback(this.error, {...this.state});
+            this.setState({ 
+                ...state,
+                error 
+            });
+        }
+        // 数据校验
+        validateFields = (validateCallback) => {
+            this.validateInit(this.state);
+            validateCallback(this.state.error, {...this.state});
         }
 
         render() {
