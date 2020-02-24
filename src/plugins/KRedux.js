@@ -77,9 +77,20 @@ export function applyMiddleware(...middlewares) {
 
         // 2. 循环中间件，或得注入参数后的中间件，得到中间件数组
         const middlewaresChain = middlewares.map(middleware => middleware(middlewareApi));
+        // middleware(middlewareApi) 返回
+        // dispatch => action => {
+        //     console.log(`${action.type}执行了`);
+        //     return dispatch(action);
+        // }
 
         // 3. 由于那个中间件都需要用到上次一处理后的数据，middlewaresChain需要实现链式调用，并拿到最后中间件处理过后的dispatch
         dispatch = compose(...middlewaresChain)(dispatch);
+        // 返回
+        // action => {
+        //     console.log(`${action.type}执行了`);
+        //     return dispatch(action);
+        // }
+        // 此时的dispatch已经包了一层或者多层，可以链式调用，相当于加强版的dispatch，调用dispatch都会走这里
 
         // 4. 得到强化后的dispatch 替换掉基础的dispatch
         return {
