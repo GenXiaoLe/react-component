@@ -40,7 +40,7 @@ const kFormCeater = Comp => {
         getFieldValues = () => {
             return {...this.state};
         }
-        validateInit = (state) => {
+        validateInit = (state, callback) => {
             // 设置错误信息
             const error = {};
             // 配置验证表
@@ -64,12 +64,17 @@ const kFormCeater = Comp => {
             this.setState({ 
                 ...state,
                 error 
+            }, () => {
+                if (callback && typeof callback === 'function') {
+                    callback();
+                }
             });
         }
         // 数据校验
         validateFields = (validateCallback) => {
-            this.validateInit(this.state);
-            validateCallback(this.state.error, {...this.state});
+            this.validateInit(this.state, () => {
+                validateCallback(this.state.error, {...this.state});
+            });
         }
 
         render() {

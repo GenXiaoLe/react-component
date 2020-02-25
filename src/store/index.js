@@ -11,11 +11,12 @@ const initState = {
 }
 
 function reduce(state = initState, action) {
+    let num = action.ployed || 1;
     switch(action.type) {
         case 'ADD':
-            return { count: state.count + 1 };
+            return { count: state.count + num };
         case 'MINUS':
-            return { count: state.count - 1 };
+            return { count: state.count - num };
         default:
             return state;
     }
