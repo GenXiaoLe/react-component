@@ -35,6 +35,21 @@ export function createStore(reduce, enhancer) {
     };
 }
 
+function _bindActionCreator(creator, dispatch) {
+    return (...args) => dispatch(creator(...args));
+}
+
+// 整个对象包裹dispatch
+// 传入 { 'add': () => ({type: 'ADD'}) }
+// 传出 { 'add': () => dispatch({type: 'ADD'}) }
+export function bindActionCreators(creators, dispatch) {
+    const obj = {};
+    for (let key in creators) {
+        obj[key] = _bindActionCreator(creators[key], dispatch);
+    }
+    return obj;
+}
+
 export function applyMiddleware(...middlewares) {
     // 由于dispatch不能处理函数，需要通过中间件获得处理后的强化版dispatch，所以需要通过链式调用将基础参数注入中间件并得到最后的dispatch
 

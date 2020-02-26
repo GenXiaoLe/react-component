@@ -5,6 +5,7 @@ import HocPage from './pages/HOCpage';
 import FormPage from './pages/FormPage';
 import ContextPage from './pages/contextPage';
 import RudexPage from './pages/rudexPage';
+import ReduxReactPage from './pages/rudexReactPage';
 
 class App extends Component {
   render() {
@@ -15,6 +16,7 @@ class App extends Component {
         <FormPage />
         <ContextPage />
         <RudexPage />
+        <ReduxReactPage />
       </div>
     )
   }

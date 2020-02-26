@@ -1,10 +1,10 @@
 // import { createStore, applyMiddleware } from 'redux';
-// import thunk from 'redux-thunk';
-// import logger from 'redux-logger';
+import thunk from 'redux-thunk';
+import logger from 'redux-logger';
 
 import { createStore, applyMiddleware } from '../plugins/KRedux';
-import thunk from '../plugins/thunk';
-import logger from '../plugins/logger';
+// import thunk from '../plugins/thunk';
+// import logger from '../plugins/logger';
 
 const initState = {
     count: 0
