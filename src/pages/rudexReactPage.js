@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-import { connect } from '../plugins/KReduxReact';
+import { connect } from 'react-redux';
+// import { connect } from '../plugins/KReduxReact';
 import { Button } from 'antd';
 // import { bindActionCreators } from '../plugins/KRedux'
 

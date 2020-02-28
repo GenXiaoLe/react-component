@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import { Provider } from 'react-redux';
-import { Provider } from './plugins/KReduxReact';
+import { Provider } from 'react-redux';
+// import { Provider } from './plugins/KReduxReact';
 
 import store from './store/index';
 import './index.css';
