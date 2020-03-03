@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch, Redirect } from 'react-router-dom';
+// import { BrowserRouter as Router, Route, Link, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Switch, Redirect } from '../plugins/KRouter';
 import { connect } from 'react-redux';
 // import { connect } from '../plugins/KReduxReact';
 import { Button } from 'antd';
