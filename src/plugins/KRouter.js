@@ -23,6 +23,10 @@ import matchPath from './matchPath';
 const RouterContext = React.createContext();
 
 class BrowserRouter extends Component {
+    static computeRootMatch(pathname) {
+        return { path: "/", url: "/", params: {}, isExact: pathname === "/" };
+    }
+
     constructor(props) {
         super(props);
         this.history = createBrowserHistory();
@@ -45,7 +49,11 @@ class BrowserRouter extends Component {
 
     render() {
         return (
-            <RouterContext.Provider value={{history: this.history, location: this.state.location}}>
+            <RouterContext.Provider value={{
+                history: this.history, 
+                location: this.state.location,
+                match: BrowserRouter.computeRootMatch(this.state.location.pathname)
+            }}>
                 {this.props.children}
             </RouterContext.Provider>
         )
@@ -57,16 +65,15 @@ class Route extends Component {
         return (
             <RouterContext.Consumer>{
                 context => {
-                    const { children, component, render } = this.props;
+                    const { children, component, render, computeMatch } = this.props;
                     // props中的location优先级更高
                     const location = this.props.location || context.location;
-                    const match = matchPath(location.pathname, this.props);
+                    const match = computeMatch ? computeMatch : matchPath(location.pathname, this.props);
                     const props = {
                         ...context,
                         location,
                         match
                     };
-                    console.log('match', match);
                     // 由于存在嵌套和路由守卫之类的方式，需要  更新上下文，所以需要再包一层上下文，使他始终接受的都是上一层的上下文
                     return <RouterContext.Provider value={props}>
                         { match ? 
@@ -113,12 +120,11 @@ class Switch extends Component {
                         if (match == null && React.isValidElement(child)) {
                             element = child;
                             const path = child.props.path;
-                            match = path
-                                ? matchPath(location.pathname, {...child.props, path})
+                            match = path ? matchPath(location.pathname, {...child.props, path})
                                 : context.match;
                         }
                     });
-                    return match ? React.cloneElement(element, { location  }) : null
+                    return match ? React.cloneElement(element, { location, computeMatch: match }) : null
                 }
             }
         </RouterContext.Consumer>

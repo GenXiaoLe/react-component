@@ -25,6 +25,7 @@ export default class RouterPage extends Component {
                         <ProvideRouter path="/user" component={UsePage} />
                         <Route path="/search/:id" component={SearchPage} />
                         <Route path="/login" component={LoginPages} />
+                        <Route render={() => <div>404</div>} />
                     </Switch>
                 </Router>
             </div>
@@ -108,7 +109,8 @@ const ProvideRouter = connect(
 const LoginPages = connect(
     state => ({login: state.login}),
     {
-        LoginIn: () => ({type: 'LOGININ_SUCCESS'})
+        // LoginIn: () => ({type: 'LOGININ_SUCCESS'})
+        LoginIn: () => ({type: 'LOGININ'})
     }
 )(
     class LoginPage extends Component {

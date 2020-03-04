@@ -1,6 +1,8 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
+import createSagaMiddleware from 'redux-saga';
+import { takeEvery, call, put } from 'redux-saga/effects';
 
 // import { createStore, applyMiddleware } from '../plugins/KRedux';
 // import thunk from '../plugins/thunk';
@@ -31,7 +33,7 @@ function loginRedurce(state = {...initUser}, action) {
             return {
                 isLogin: true,
                 user: {
-                    name: 'xiaoming'
+                    name: action.user || 'xiaoming'
                 }
             };
         case 'LOGINOUT_SUCCESS':
@@ -46,6 +48,31 @@ function loginRedurce(state = {...initUser}, action) {
     }
 }
 
-const store = createStore(combineReducers({ count: counterRedurce, login: loginRedurce }), applyMiddleware(logger, thunk));
+function mockData(action) {
+    return new Promise((reslove) => {
+        setTimeout(() => {
+            reslove({
+                name: 'xiaohong'
+            });
+        }, 1000);
+    })
+}
+
+// eslint-disable-next-line require-yield
+function* loginSaga(action) {
+    const user = yield call(mockData, action.type);
+    
+    yield put({ type: 'LOGININ_SUCCESS', user });
+}
+
+function* mySaga() {
+    yield takeEvery('LOGININ', loginSaga);
+}
+
+const saga = createSagaMiddleware();
+
+const store = createStore(combineReducers({ count: counterRedurce, login: loginRedurce }), applyMiddleware(logger, thunk, saga));
+
+saga.run(mySaga);
 
 export default store;
