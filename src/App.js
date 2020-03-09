@@ -6,6 +6,7 @@ import ContextPage from './pages/contextPage';
 import RudexPage from './pages/rudexPage';
 import ReduxReactPage from './pages/rudexReactPage';
 import RouterPage from './pages/routerPage';
+import ReactPage from './pages/reactPage';
 
 class App extends Component {
   render() {
@@ -17,6 +18,7 @@ class App extends Component {
         <RudexPage />
         <ReduxReactPage />
         <RouterPage />
+        <ReactPage />
       </div>
     )
   }

@@ -58,7 +58,6 @@ function mockData(action) {
     })
 }
 
-// eslint-disable-next-line require-yield
 function* loginSaga(action) {
     const user = yield call(mockData, action.type);
     

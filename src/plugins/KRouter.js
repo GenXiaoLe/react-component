@@ -18,9 +18,8 @@
 
 import React, { Component } from 'react';
 import { createBrowserHistory } from 'history';
-import matchPath from './matchPath';
-
-const RouterContext = React.createContext();
+import matchPath from './component/matchPath';
+import { RouterContext } from './component/routerContext';
 
 class BrowserRouter extends Component {
     static computeRootMatch(pathname) {

@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 // import { connect } from '../plugins/KReduxReact';
 import { Button } from 'antd';
 
+import { useParams } from './components/useParams';
+
 export default class RouterPage extends Component {
     render() {
         return (
@@ -17,6 +19,8 @@ export default class RouterPage extends Component {
                         <Link to="/user">用户中心</Link>
                         <span> | </span>
                         <Link to="/search/123">搜索页面</Link>
+                        <span> | </span>
+                        <Link to="/render/123">render页面</Link>
                     </div>
 
 
@@ -25,12 +29,23 @@ export default class RouterPage extends Component {
                         <ProvideRouter path="/user" component={UsePage} />
                         <Route path="/search/:id" component={SearchPage} />
                         <Route path="/login" component={LoginPages} />
+                        <Route path="/render/:id" render={() => <RenderPage />} />
                         <Route render={() => <div>404</div>} />
                     </Switch>
                 </Router>
             </div>
         )
     }
+}
+
+function RenderPage(props) {
+    const { id } = useParams();
+    console.log(useParams());
+    return (
+        <div>
+            {`RenderPage-${id}`}
+        </div>
+    )
 }
 
 class UsePage extends Component {
@@ -55,6 +70,7 @@ class HomePage extends Component {
 
 class SearchPage extends Component {
     render() {
+        console.log(this.props);
         const { match } = this.props;
         return (
             <div>
@@ -115,7 +131,6 @@ const LoginPages = connect(
 )(
     class LoginPage extends Component {
         render() {
-            console.log(this.props, 'login');
             const { location, login, LoginIn } = this.props;
             const { isLogin } = login;
 
