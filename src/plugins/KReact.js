@@ -7,9 +7,17 @@ function createElement(type, props, ...children) {
         delete props.__source;
         delete props.__self;
     }
+    
+    // 如果class组件有传入默认defaultProps
+    let defaultProps = {};
+    if (type && type.defaultProps) {
+        defaultProps = { ...type.defaultProps };
+    }
+
     return {
         type: type,
         props: {
+            ...defaultProps,
             ...props,
             children: children.map(item => typeof item === 'object' ? item : _createTextNode(item))
         }

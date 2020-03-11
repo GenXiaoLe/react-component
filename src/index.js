@@ -25,17 +25,22 @@ import Component from './plugins/component/components';
 import ReactDOM from './plugins/KReactDOM';
 
 class ComponentNode extends Component {
+    // 固定写法
+    // 默认属性
+    static defaultProps = { color: 'pink' };
     render() {
+        console.log(this.props);
+        const { color } = this.props;
         return (
             <div>
-                ComponentNode
+                <p>ComponentNode</p>
+                <p className={color}>_defaultProps</p>
             </div>
         )
     }
 }
 
 function FunNode(props) {
-    console.log(Component);
     return <div>funNode</div>
 }
 
@@ -47,7 +52,7 @@ const jsx = <div>
                     <p>h3 baidu</p>
                 </h3>
                 <FunNode />
-                <ComponentNode />
+                <ComponentNode color="red" />
                 <>
                     <div>fragmentNode</div>
                 </>
