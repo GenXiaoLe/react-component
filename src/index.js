@@ -20,9 +20,9 @@
 // // Learn more about service workers: https://bit.ly/CRA-PWA
 // serviceWorker.unregister();
 
-import React from './plugins/KReact';
+import React from './plugins/KReact.fiber';
 import Component from './plugins/component/components';
-import ReactDOM from './plugins/KReactDOM';
+import ReactDOM from './plugins/KReactDOM.fiber';
 
 class ComponentNode extends Component {
     // 固定写法
@@ -51,16 +51,16 @@ const jsx = <div>
                     <a href="www.baidu.com">baidu</a>
                     <p>h3 baidu</p>
                 </h3>
-                <FunNode />
-                <ComponentNode color="red" />
-                <>
+                {/* <FunNode /> */}
+                {/* <ComponentNode color="red" /> */}
+                {/* <>
                     <div>fragmentNode</div>
-                </>
-                {[1, 2, 3].map(item => {
+                </> */}
+                {/* {[1, 2, 3].map(item => {
                     return (<div key={item}>
                         <p>{item}</p>
                     </div>)
-                })}
+                })} */}
             </div>
 
 ReactDOM.render(
