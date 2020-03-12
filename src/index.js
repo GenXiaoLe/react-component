@@ -51,11 +51,11 @@ const jsx = <div>
                     <a href="www.baidu.com">baidu</a>
                     <p>h3 baidu</p>
                 </h3>
-                {/* <FunNode /> */}
-                {/* <ComponentNode color="red" /> */}
-                {/* <>
+                <FunNode />
+                <ComponentNode color="red" />
+                <>
                     <div>fragmentNode</div>
-                </> */}
+                </>
                 {/* {[1, 2, 3].map(item => {
                     return (<div key={item}>
                         <p>{item}</p>

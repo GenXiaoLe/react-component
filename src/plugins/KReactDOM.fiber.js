@@ -163,7 +163,6 @@ function _createComNode(fiber) {
 
 // 创建function节点
 function _createFnNode(fiber) {
-    rootFiber = fiber;
     const { type, props } = fiber;
     let children = [type(props)];
     reconcilerChildren(fiber, children);
@@ -181,6 +180,7 @@ function _createElement(fiber) {
 
 // 创建子节点的fiber
 function _createFragment(fiber) {
+    console.log(fiber);
     const { children } = fiber.props;
     reconcilerChildren(fiber, children);
 }
@@ -190,7 +190,8 @@ function performUnitOfWork(fiber) {
     // 执行当前的任务
     const { type } = fiber;
     if (typeof type === 'function') {
-        type.isReactComponent
+        console.log(type);
+        type.prototype.isReactComponent
             ? _createComNode(fiber)
             : _createFnNode(fiber);
     } else if (type) {
@@ -227,7 +228,7 @@ function commitWorker(fiber) {
 
     // 找出父节点的fiber
     let parentNodeFiber = fiber.parent;
-    while(!parentNodeFiber) {
+    while(!parentNodeFiber.node) {
         parentNodeFiber = parentNodeFiber.parent;
     }
     // 拿出真实父节点DOM
@@ -249,6 +250,7 @@ function commitWorker(fiber) {
 }
 
 function commitRoot() {
+    console.log(rootFiber);
     // 提交fiber tree上所有的节点 从root开始
     commitWorker(rootFiber.child);
 }
@@ -259,7 +261,6 @@ function workLoop(deadline) {
     // 循环调度执行所有任务 规则是有下一个人物并且循环时间尚未结束
     while(nextUnitOfWork && deadline.timeRemaining() > 1) {
         nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
-        console.log(nextUnitOfWork);
     }
 
     // 执行完所有的任务，需要统一提交，渲染并插入到真实的dom节点中
