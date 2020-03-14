@@ -22,14 +22,13 @@
 
 import React from './plugins/KReact.fiber';
 import Component from './plugins/component/components';
-import ReactDOM from './plugins/KReactDOM.fiber';
+import ReactDOM, { useState } from './plugins/KReactDOM.fiber';
 
 class ComponentNode extends Component {
     // 固定写法
     // 默认属性
     static defaultProps = { color: 'pink' };
     render() {
-        console.log(this.props);
         const { color } = this.props;
         return (
             <div>
@@ -41,12 +40,17 @@ class ComponentNode extends Component {
 }
 
 function FunNode(props) {
-    return <div>funNode</div>
+    const [count, setCount] = useState(0);
+
+    return <div>
+        <button onClick={() => setCount(count + 1)}>{count}</button>
+        <p>funNode</p>
+    </div>
 }
 
 const jsx = <div>
                 <a href="www.baidu.com">kkb</a>
-                <p onClick={() => console.log('onclick')}>kkb-text</p>
+                <p>kkb-text</p>
                 <h3>
                     <a href="www.baidu.com">baidu</a>
                     <p>h3 baidu</p>
