@@ -41,7 +41,7 @@ let wipFiber;
 // 当前hooks的深度
 let hookIndex;
 // 删除的数组
-let deltions;
+let deletions;
 
 // 虚拟dom转化为真实dom
 function render(vnode, container) {
@@ -53,6 +53,8 @@ function render(vnode, container) {
     }
     // 赋值给下一个任务单元 以开启任务执行
     nextUnitOfWork = wipRoot;
+    //初始化删除数组
+    deletions = [];
 }
 
 // 创建节点
@@ -68,7 +70,7 @@ function _createNode(vnode) {
     }
 
     // 将属性填充进节点中
-    _updateNode(node, props);
+    _updateNode(node, {}, props);
 
     return node;
 }
@@ -113,8 +115,8 @@ function reconcilerChildren(workInProgressFiber, children) {
         } else if (!isSameType && oldChildFiber) {
             // 打上删除的tags
             oldChildFiber.effectTag = DELETIONS;
-            // 把删除的节点push入deltions
-            deltions.push(oldChildFiber);
+            // 把删除的节点push入deletions
+            deletions.push(oldChildFiber);
         }
 
         if (oldChildFiber) {
@@ -138,7 +140,21 @@ function reconcilerChildren(workInProgressFiber, children) {
 }
 
 // 接收dom以及props，进行赋值
-function _updateNode(node, values) {
+function _updateNode(node, prevValues, values) {
+    // 如果有旧的属性 那么先进行diff 把不一致的重置和清空 保证之后赋值正常进行
+    Object.keys(prevValues)
+    .filter(item => item !== 'children') // 过滤children这个props
+    .filter(item => !(item in values)) // 把目前不存在的属性等过滤出来
+    .forEach(key => {
+        if (key.slice(0, 2) === 'on') {
+            let _typeName = key.slice(2).toLocaleLowerCase();
+            document.removeEventListener(_typeName, values[key]);
+        } else {
+            node[key] = '';
+        }
+    })
+    
+    // 为元素赋值属性
     Object.keys(values)
         .filter(item => item !== 'children')
         .forEach(key => {
@@ -225,10 +241,10 @@ function performUnitOfWork(fiber) {
 // 每个fiber上新增一个属性hooks数组，用来存放hooks，所有的hooks都在里面
 export function useState(init) {
     // 如果存在一个旧的hook 则需要从当前工作的fiber中找出这个hook
-    let oldHook = wipFiber.base && wipFiber.base.hooks[hookIndex];
+    const oldHook = wipFiber.base && wipFiber.base.hooks[hookIndex];
 
     // 创建一个 hook 用来存放state以及每次更新的数组
-    let hook = {
+    const hook = {
         state: oldHook ? oldHook.state : init, // 当前hook的state
         queue: [] // 当前hook更新的数组 即当前hook的执行数组 长度即执行了几次
     }
@@ -242,7 +258,7 @@ export function useState(init) {
     });
 
     // 渲染setState
-    let setState = action => {
+    const setState = action => {
         // 将action push进queue中 比如state + 1;
         hook.queue.push(action);
 
@@ -255,6 +271,8 @@ export function useState(init) {
 
         // 将下一个任务单元设置为当前赋值后的任务
         nextUnitOfWork = wipRoot;
+        // 重置删除数组
+        deletions = [];
     };
 
     // 将当前拼装好的hook push入当前工作fiber的hooks中 之后在调用useState的时候能够取到该hook
@@ -285,7 +303,7 @@ function commitWorker(fiber) {
         parentNode.appendChild(fiber.node);
     } else if (fiber.effectTag === UPDATE && fiber.node !== null) {
         // 如果当前节点是一个旧节点，则需要先进行一遍赋值
-        _updateNode(fiber.node, fiber.props);
+        _updateNode(fiber.node, fiber.base.props, fiber.props);
     } else if (fiber.effectTag === DELETIONS && fiber.node !== null) {
         // 删除节点 传入当前元素和父元素
         commitDeletions(fiber, parentNode);
@@ -308,6 +326,8 @@ function commitDeletions(fiber, parentNode) {
 }
 
 function commitRoot() {
+    // 先删除节点 再去遍历 更新或者添加新的节点
+    deletions.forEach(commitWorker);
     // 提交fiber tree上所有的节点 从root开始
     commitWorker(wipRoot.child);
     // 记录当前工作的根节点
