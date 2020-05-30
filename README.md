@@ -1,3 +1,12 @@
+## 插件以及源码重构均在plugins中
+- react-dom
+- react
+- rdeux
+- redux-react
+- fiber
+- react-router
+- thunk
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
