@@ -23,8 +23,8 @@
 //     base: null, 上一个fiber 用于diff
 //     props: {}, vode收到的props
 //     parent: null, 父节点
-//     child: {}, 第一个子节点
-//     sibling: {} 子节点的兄弟元素
+//     child: {}, 当前filber的第一个子节点
+//     sibling: {} 当前filber的兄弟元素
 //     effectTag: '' 节点的状态
 // }
 
